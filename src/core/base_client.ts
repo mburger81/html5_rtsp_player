@@ -1,5 +1,5 @@
-import {Log} from '../deps/bp_logger.js';
-import {EventEmitter} from '../deps/bp_event.js';
+import {Log} from '../deps/bp_logger';
+import {EventEmitter} from '../deps/bp_event';
 
 export class BaseClient {
     constructor(options={flush: 100}) {
@@ -25,9 +25,9 @@ export class BaseClient {
     }
 
     static streamType() {
-        return null;    
+        return null;
     }
-    
+
     destroy() {
         this.detachTransport();
     }

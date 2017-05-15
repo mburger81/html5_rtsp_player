@@ -1,5 +1,5 @@
-import {ExpGolomb} from '../util/exp-golomb.js';
-import {NALU} from '../elementary/NALU.js';
+import {ExpGolomb} from '../util/exp-golomb';
+import {NALU} from '../elementary/NALU';
 
 export class H264Parser {
 
@@ -38,7 +38,7 @@ export class H264Parser {
 
     parseNAL(unit) {
         if (!unit) return false;
-        
+
         let push = false;
         switch (unit.type()) {
             case NALU.NDR:

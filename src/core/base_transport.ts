@@ -1,4 +1,4 @@
-import {EventEmitter} from "../deps/bp_event.js";
+import {EventEmitter} from "../deps/bp_event";
 
 export class BaseRequest {
     constructor(data) {
@@ -26,7 +26,7 @@ export class BaseTransport {
     static canTransfer(stream_type) {
         return BaseTransport.streamTypes().includes(stream_type);
     }
-    
+
     static streamTypes() {
         return [];
     }

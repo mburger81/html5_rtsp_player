@@ -1,5 +1,5 @@
-import {EventEmitter} from '../../deps/bp_event.js';
-import {getTagged} from '../../deps/bp_logger.js';
+import {EventEmitter} from '../../deps/bp_event';
+import {getTagged} from '../../deps/bp_logger';
 //import {MP4Inspect} from '../iso-bmff/mp4-inspector.js';
 
 const LOG_TAG = "mse";
@@ -128,7 +128,7 @@ export class Buffer {
             return;
         }
         let range = this.cleanRanges.shift();
-        Log.debug(`${this.codec} remove range [${range[0]} - ${range[1]}). 
+        Log.debug(`${this.codec} remove range [${range[0]} - ${range[1]}).
                     \nUpdating: ${this.sourceBuffer.updating}
                     `);
         this.cleaning = true;

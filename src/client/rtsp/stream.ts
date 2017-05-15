@@ -1,7 +1,7 @@
-import {getTagged} from '../../deps/bp_logger.js';
+import {getTagged} from '../../deps/bp_logger';
 
-import {RTSPClientSM as RTSPClient}  from './client.js';
-import {Url} from '../../core/util/url.js';
+import {RTSPClientSM as RTSPClient}  from './client';
+import {Url} from '../../core/util/url';
 
 const LOG_TAG = "rtsp:stream";
 const Log = getTagged(LOG_TAG);
@@ -43,7 +43,7 @@ export class RTSPStream {
             /* Should probably check session level control before this */
             return `${this.client.contentBase}${track.control}`;
         }
-        else//need return default 
+        else//need return default
             return track.control;
         Log.error('Can\'t determine track URL from ' +
             'block.control:' + track.control + ', ' +

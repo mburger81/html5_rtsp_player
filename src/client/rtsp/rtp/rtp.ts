@@ -1,5 +1,5 @@
 // TODO: asm.js
-import {Log} from '../../../deps/bp_logger.js';
+import {Log} from '../../../deps/bp_logger';
 export default class RTP {
     constructor(pkt/*uint8array*/, sdp) {
         let bytes = new DataView(pkt.buffer, pkt.byteOffset, pkt.byteLength);
@@ -70,5 +70,5 @@ export default class RTP {
     isVideo(){return this.media.type == 'video';}
     isAudio(){return this.media.type == 'audio';}
 
-    
+
 }

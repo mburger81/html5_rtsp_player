@@ -1,8 +1,8 @@
-import {getTagged} from './deps/bp_logger.js';
-import {Url} from './core/util/url.js';
-import {Remuxer} from './core/remuxer/remuxer.js';
-import DEFAULT_CLIENT from './client/rtsp/client.js';
-import DEFAULT_TRANSPORT from './transport/websocket.js';
+import {getTagged} from './deps/bp_logger';
+import {Url} from './core/util/url';
+import {Remuxer} from './core/remuxer/remuxer';
+import DEFAULT_CLIENT from './client/rtsp/client';
+import DEFAULT_TRANSPORT from './transport/websocket';
 
 const Log = getTagged('wsp');
 
@@ -78,7 +78,7 @@ export class WSPlayer {
                 Log.warn(`Client stream type ${client.streamType()} is incompatible with transport types [${transport.streamTypes().join(', ')}]. Skip`)
             }
         }
-        
+
         this.type = StreamType.RTSP;
         this.url = null;
         if (opts.url && opts.type) {
@@ -214,7 +214,7 @@ export class WSPlayer {
             this.client.stop();
         }
     }
-    
+
     async destroy() {
         if (this.transport) {
             if (this.client) {

@@ -1,7 +1,7 @@
-import {getTagged} from '../deps/bp_logger.js';
-import {JSEncrypt} from '../deps/jsencrypt.js';
-import {BaseTransport} from "../core/base_transport.js";
-import {CPU_CORES} from "../core/util/browser.js";
+import {getTagged} from '../deps/bp_logger';
+import {JSEncrypt} from '../deps/jsencrypt';
+import {BaseTransport} from "../core/base_transport";
+import {CPU_CORES} from "../core/util/browser";
 
 const LOG_TAG = "transport:ws";
 const Log = getTagged(LOG_TAG);

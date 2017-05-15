@@ -1,15 +1,15 @@
-import {getTagged} from '../../deps/bp_logger.js';
-import {StateMachine} from '../../deps/bp_statemachine.js';
-import {SDPParser} from '../../core/parsers/sdp.js';
-import {RTSPStream} from './stream.js';
+import {getTagged} from '../../deps/bp_logger';
+import {StateMachine} from '../../deps/bp_statemachine';
+import {SDPParser} from '../../core/parsers/sdp';
+import {RTSPStream} from './stream';
 // import {RTP} from './rtp/rtp';
-import RTPFactory from './rtp/factory.js';
-import {MessageBuilder} from './message.js';
-import {RTPPayloadParser} from './rtp/payload/parser.js';
-import {BaseClient} from '../../core/base_client.js';
-import {PayloadType} from '../../core/defs.js';
-import {base64ToArrayBuffer, hexToByteArray} from '../../core/util/binary.js';
-import {AACParser} from '../../core/parsers/aac.js';
+import RTPFactory from './rtp/factory';
+import {MessageBuilder} from './message';
+import {RTPPayloadParser} from './rtp/payload/parser';
+import {BaseClient} from '../../core/base_client';
+import {PayloadType} from '../../core/defs';
+import {base64ToArrayBuffer, hexToByteArray} from '../../core/util/binary';
+import {AACParser} from '../../core/parsers/aac';
 
 const LOG_TAG = "client:rtsp";
 const Log = getTagged(LOG_TAG);
@@ -30,7 +30,7 @@ export default class RTSPClient extends BaseClient {
         };
         this.sampleQueues={};
     }
-    
+
     static streamType() {
         return 'rtsp';
     }

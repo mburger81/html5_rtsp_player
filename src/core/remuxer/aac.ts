@@ -1,6 +1,6 @@
-import {getTagged} from '../../deps/bp_logger.js';
-import {MSE} from '../presentation/mse.js';
-import {BaseRemuxer} from './base.js';
+import {getTagged} from '../../deps/bp_logger';
+import {MSE} from '../presentation/mse';
+import {BaseRemuxer} from './base';
 
 const Log = getTagged("remuxer:aac");
 // TODO: asm.js
@@ -57,7 +57,7 @@ export class AACRemuxer extends BaseRemuxer {
             this.mp4track.len += aac.getSize();
         }
     }
-    
+
     getPayload() {
         if (!this.readyToDecode || !this.samples.length) return null;
         this.samples.sort(function(a, b) {

@@ -1,4 +1,4 @@
-import {AACFrame} from './AACFrame.js';
+import {AACFrame} from './AACFrame';
 import {BitArray} from '../util/binary';
 // import {AACParser} from "../parsers/aac.js";
 // TODO: asm.js

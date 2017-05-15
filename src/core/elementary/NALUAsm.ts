@@ -1,5 +1,5 @@
-import {Log} from '../../deps/bp_logger.js';
-import {NALU} from './NALU.js';
+import {Log} from '../../deps/bp_logger';
+import {NALU} from './NALU';
 
 // TODO: asm.js
 export class NALUAsm {

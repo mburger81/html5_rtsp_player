@@ -1,10 +1,10 @@
-import {EventEmitter, EventSourceWrapper} from '../../deps/bp_event.js';
-import {getTagged} from "../../deps/bp_logger.js";
-import {MP4} from '../iso-bmff/mp4-generator.js';
-import {AACRemuxer} from './aac.js';
-import {H264Remuxer} from './h264.js';
-import {MSE} from '../presentation/mse.js';
-import {PayloadType} from "../defs.js";
+import {EventEmitter, EventSourceWrapper} from '../../deps/bp_event';
+import {getTagged} from "../../deps/bp_logger";
+import {MP4} from '../iso-bmff/mp4-generator';
+import {AACRemuxer} from './aac';
+import {H264Remuxer} from './h264';
+import {MSE} from '../presentation/mse';
+import {PayloadType} from "../defs";
 
 const LOG_TAG = "remuxer";
 const Log = getTagged(LOG_TAG);
@@ -38,7 +38,7 @@ export class Remuxer {
 
         this.mseEventSource.on('error', this.errorListener);
         this.mseEventSource.on('sourceclosed', this.closeListener);
-        
+
         this.eventSource.addEventListener('ready', this.init.bind(this));
     }
 
@@ -117,7 +117,7 @@ export class Remuxer {
             this.mse.play();
             this.enabled = true;
         });
-        
+
     }
 
     initMSE(track_type, codec) {

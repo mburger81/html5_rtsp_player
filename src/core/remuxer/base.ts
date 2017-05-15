@@ -1,4 +1,4 @@
-import {getTagged} from '../../deps/bp_logger.js';
+import {getTagged} from '../../deps/bp_logger';
 
 const Log = getTagged('remuxer:base');
 let track_id = 1;
@@ -70,9 +70,9 @@ export class BaseRemuxer {
     static toMS(timestamp) {
         return timestamp/90;
     }
-    
+
     setConfig(config) {
-        
+
     }
 
     insertDscontinuity() {

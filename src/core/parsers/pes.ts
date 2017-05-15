@@ -1,4 +1,4 @@
-import {appendByteArray} from '../util/binary.js';
+import {appendByteArray} from '../util/binary';
 
 export class PESAsm {
 
@@ -99,7 +99,7 @@ export class PESAsm {
             return null;
         }
     }
-    
+
     feed(frag, shouldParse) {
 
         let res = null;

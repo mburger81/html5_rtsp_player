@@ -1,8 +1,8 @@
-import {getTagged} from '../../deps/bp_logger.js';
-import {H264Parser} from '../parsers/h264.js';
-import {BaseRemuxer} from './base.js';
+import {getTagged} from '../../deps/bp_logger';
+import {H264Parser} from '../parsers/h264';
+import {BaseRemuxer} from './base';
 
-const Log = getTagged("remuxer:h264"); 
+const Log = getTagged("remuxer:h264");
 // TODO: asm.js
 export class H264Remuxer extends BaseRemuxer {
 
@@ -97,7 +97,7 @@ export class H264Remuxer extends BaseRemuxer {
             }
 
             let unit = sample.unit;
-            
+
             pts = /*Math.round(*/(sample.pts - this.initDTS)/*/this.tsAlign)*this.tsAlign*/;
             dts = /*Math.round(*/(sample.dts - this.initDTS)/*/this.tsAlign)*this.tsAlign*/;
             // ensure DTS is not bigger than PTS

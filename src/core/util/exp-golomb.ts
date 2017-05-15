@@ -2,7 +2,7 @@
  * Parser for exponential Golomb codes, a variable-bitwidth number encoding scheme used by h264.
 */
 // TODO: asm.js
-import {Log as logger} from '../../deps/bp_logger.js';
+import {Log as logger} from '../../deps/bp_logger';
 
 export class ExpGolomb {
 
@@ -132,5 +132,5 @@ export class ExpGolomb {
     // ():int
   readUInt() {
     return this.readBits(32);
-  }  
+  }
 }
