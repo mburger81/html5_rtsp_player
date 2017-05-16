@@ -4,6 +4,15 @@ import {PayloadType} from '../defs';
 const Log = getTagged("parser:sdp");
 
 export class SDPParser {
+    private version;
+    private origin;
+    private sessionName;
+    private timing;
+    private sessionBlock;
+    private media;
+    private tracks;
+    private mediaMap;
+
     constructor(){
         this.version = -1;
         this.origin = null;
@@ -20,7 +29,7 @@ export class SDPParser {
         return new Promise((resolve, reject)=>{
             var dataString = content;
             var success = true;
-            var currentMediaBlock = this.sessionBlock;
+            var currentMediaBlock: any = this.sessionBlock;
 
             // TODO: multiple audio/video tracks
 

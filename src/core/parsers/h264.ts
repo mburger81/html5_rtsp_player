@@ -2,8 +2,9 @@ import {ExpGolomb} from '../util/exp-golomb';
 import {NALU} from '../elementary/NALU';
 
 export class H264Parser {
+    private track;
 
-    constructor(remuxer) {
+    constructor(public remuxer) {
         this.remuxer = remuxer;
         this.track = remuxer.mp4track;
     }

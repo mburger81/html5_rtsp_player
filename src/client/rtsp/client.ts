@@ -21,6 +21,8 @@ export class RTPError {
 }
 
 export default class RTSPClient extends BaseClient {
+    private clientSM: RTSPClientSM;
+
     constructor(options={flush: 200}) {
         super(options);
         this.clientSM = new RTSPClientSM(this);

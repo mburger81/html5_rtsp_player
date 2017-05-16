@@ -6,6 +6,8 @@ export class NALUAsm {
     static get NALTYPE_FU_A() {return 28;}
     static get NALTYPE_FU_B() {return 29;}
 
+    private nalu;
+
     constructor() {
         this.nalu = null;
     }

@@ -6,6 +6,19 @@ const LOG_TAG = "mse";
 const Log = getTagged(LOG_TAG);
 
 export class Buffer {
+    private mediaSource;
+    private players;
+    private cleaning;
+    private parent;
+    private queue;
+    private cleanResolvers;
+    private codec;
+    private cleanRanges;
+    private sourceBuffer;
+    private eventSource;
+    private is_live;
+
+
     constructor(parent, codec) {
         this.mediaSource = parent.mediaSource;
         this.players = parent.players;
@@ -253,6 +266,15 @@ export class MSE {
         return (window.MediaSource && window.MediaSource.isTypeSupported(`video/mp4; codecs="${codecs.join(',')}"`));
     }
 
+    private players;
+    private mediaSource: MediaSource;
+    private eventSource; EventEmitter;
+    private buffers;
+    private is_live;
+    private resolved;
+    private mediaReady;
+    private updating;
+
     constructor (players) {
         this.players = players;
         this.mediaSource = new MediaSource();
@@ -307,23 +329,23 @@ export class MSE {
         this.eventSource.clear();
         this.resolved = false;
         this.mediaReady = new Promise((resolve, reject)=> {
-            this._sourceOpen = ()=> {
+            _sourceOpen => {
                 Log.debug(`Media source opened: ${this.mediaSource.readyState}`);
                 if (!this.resolved) {
                     this.resolved = true;
                     resolve();
                 }
             };
-            this._sourceEnded = ()=>{
+            _sourceEnded => {
                 Log.debug(`Media source ended: ${this.mediaSource.readyState}`);
             };
-            this._sourceClose = ()=>{
+            _sourceClose => {
                 Log.debug(`Media source closed: ${this.mediaSource.readyState}`);
                 if (this.resolved) {
                     this.eventSource.dispatchEvent('sourceclosed');
                 }
             };
-            this.eventSource.addEventListener('sourceopen', this._sourceOpen);
+            this.eventSource.addEventListener('sourceopen', this._sourceOpen());
             this.eventSource.addEventListener('sourceended', this._sourceEnded);
             this.eventSource.addEventListener('sourceclose', this._sourceClose);
         });

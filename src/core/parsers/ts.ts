@@ -11,6 +11,13 @@ export class PESType {
 export class TSParser {
     static get PACKET_LENGTH() {return  188;}
 
+    private pmtParsed;
+    private pesParserTypes;
+    private pesParsers;
+    private pesAsms;
+    private ontracks;
+    private toSkip;
+
     constructor() {
         this.pmtParsed = false;
         this.pesParserTypes = new Map();

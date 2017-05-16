@@ -33,7 +33,21 @@ export class BaseRemuxer {
         return track_id++;
     }
 
-    constructor(timescale, scaleFactor, params) {
+    private timeOffset;
+    public timescale;
+    public scaleFactor;
+    public readyToDecode;
+    public samples;
+    private seq;
+    public tsAlign;
+    private initPTS;
+    public initDTS;
+    public initialized;
+    public mp4track;
+    public nextDts;
+
+
+    constructor(timescale, scaleFactor) {
         this.timeOffset = 0;
         this.timescale = timescale;
         this.scaleFactor = scaleFactor;
@@ -92,13 +106,14 @@ export class BaseRemuxer {
         this.mp4track.samples = [];
     }
 
-    getPayloadBase(sampleFunction, setupSample) {
+    getPayloadBase(sampleFunction?, setupSample?) {
         if (!this.readyToDecode || !this.initialized || !this.samples.length) return null;
         this.samples.sort(function(a, b) {
             return (a.dts-b.dts);
         });
         return true;
 
+        /* mburger NEVER REACHED CODE
         let payload = new Uint8Array(this.mp4track.len);
         let offset = 0;
         let samples=this.mp4track.samples;
@@ -134,5 +149,6 @@ export class BaseRemuxer {
         // samplesPostFunction(samples); // TODO:
 
         return new Uint8Array(payload.buffer, 0, this.mp4track.len);
+        */
     }
 }

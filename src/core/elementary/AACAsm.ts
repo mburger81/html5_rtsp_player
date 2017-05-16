@@ -3,6 +3,8 @@ import {BitArray} from '../util/binary';
 // import {AACParser} from "../parsers/aac.js";
 // TODO: asm.js
 export class AACAsm {
+    private config;
+
     constructor() {
         this.config = null;
     }

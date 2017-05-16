@@ -24,7 +24,7 @@ export class NALU {
         }
     }
 
-    constructor(ntype, nri, data, dts, pts) {
+    constructor(public ntype, public nri, public data, public dts, public pts) {
 
         this.data = data;
         this.ntype = ntype;

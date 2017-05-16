@@ -1,6 +1,6 @@
 export class AACFrame {
 
-    constructor(data, dts, pts) {
+    constructor(public data, public dts, public pts) {
         this.dts = dts;
         this.pts = pts ? pts : this.dts;
 

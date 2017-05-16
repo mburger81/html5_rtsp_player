@@ -1,2 +1,2 @@
 // export * from 'jsencrypt';
-export * from '../../node_modules/jsencrypt/src/jsencrypt.js';
+export * from 'jsencrypt/src/jsencrypt';

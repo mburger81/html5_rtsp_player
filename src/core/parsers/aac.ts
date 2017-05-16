@@ -1,6 +1,8 @@
 import {BitArray, bitSlice} from '../util/binary';
 
 export class AACParser {
+    private static codec;
+
     static get SampleRates() {return  [
         96000, 88200,
         64000, 48000,

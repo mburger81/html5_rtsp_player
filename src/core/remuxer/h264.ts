@@ -5,8 +5,14 @@ import {BaseRemuxer} from './base';
 const Log = getTagged("remuxer:h264");
 // TODO: asm.js
 export class H264Remuxer extends BaseRemuxer {
+    private firstDTS;
+    private firstPTS
+    private lastDTS;
+    private lastSampleDuration;
+    private lastDurations;
+    private h264: H264Parser;
 
-    constructor(timescale, scaleFactor=1, params={}) {
+    constructor(timescale, scaleFactor=1, params: any={}) {
         super(timescale, scaleFactor);
 
         this.nextDts = undefined;

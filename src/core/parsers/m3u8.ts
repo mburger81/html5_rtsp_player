@@ -1,7 +1,7 @@
 // adapted from https://github.com/kanongil/node-m3u8parse/blob/master/attrlist.js
 class AttrList {
 
-    constructor(attrs) {
+    constructor(public attrs) {
         if (typeof attrs === 'string') {
             attrs = AttrList.parseAttrList(attrs);
         }
@@ -92,7 +92,7 @@ export class M3U8Parser {
         let chunkList = [];
         let playlistList = [];
         let expectedUrl = false;
-        let cont = {};
+        let cont: any = {};
         let urlType=null;
         while (playlist.length) {
             let entry = playlist.shift().replace(/\r/, '');
@@ -119,6 +119,7 @@ export class M3U8Parser {
                 } else if (entry.startsWith('#EXT-X-STREAM-INF')){
                     let props = entry.split(':')[1];
                     let al = new AttrList(props);
+
                     for (let prop in al.attrs) {
                         cont[prop.toLowerCase()]= al.attrs[prop];
                     }

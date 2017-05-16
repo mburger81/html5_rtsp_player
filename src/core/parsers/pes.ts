@@ -1,6 +1,11 @@
 import {appendByteArray} from '../util/binary';
 
 export class PESAsm {
+    private fragments;
+    private pesLength;
+    private pesPkt;
+    private extPresent;
+    private hasLength;
 
     constructor() {
         this.fragments = [];
@@ -21,7 +26,7 @@ export class PESAsm {
     parseHeader() {
         let hdr = this.fragments[0];
         let pesPrefix = (hdr[0] << 16) + (hdr[1] << 8) + hdr[2];
-        this.extPresent = ![0xbe, 0xbf].includes(hdr[3]);
+        this.extPresent = !([0xbe, 0xbf].includes(hdr[3]));
         if (pesPrefix === 1) {
             let pesLength = (hdr[4] << 8) + hdr[5];
             if (pesLength) {
@@ -58,7 +63,7 @@ export class PESAsm {
         return value;
     }
 
-    parseExtension(frag) {
+    parseExtension(frag): any {
         let  pesFlags, pesPrefix, pesLen, pesHdrLen, pesPts, pesDts, payloadStartOffset;
             pesFlags = frag[1];
             if (pesFlags & 0xC0) {
@@ -109,7 +114,7 @@ export class PESAsm {
             }
 
             let offset = 6;
-            let parsed = {};
+            let parsed: any = {};
             if (this.extPresent) {
                 // TODO: make sure fragment have necessary length
                 parsed = this.parseExtension(this.fragments[0].subarray(6));

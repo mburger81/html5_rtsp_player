@@ -1,7 +1,7 @@
 import {EventEmitter} from "../deps/bp_event";
 
 export class BaseRequest {
-    constructor(data) {
+    constructor(public data) {
         this.data = data;
         this.before = (data)=>{return Promise.resolve(data)};
     }
