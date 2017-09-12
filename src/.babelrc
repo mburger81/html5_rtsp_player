@@ -1,0 +1,36 @@
+{
+    "presets": [
+        [
+            "es2015",
+            {
+                "modules": false
+                // ,
+                // "debug": true
+            }
+        ]
+        // [
+        //     "env",
+        //     {
+        //         "targets": {
+        //             "chrome": 53,
+        //             "firefox": 54,
+        //             "safari": 9,
+        //             "edge": 12,
+        //             "ie": 11
+        //         },
+        //         "modules": false,
+        //         "debug": true,
+        //         "loose": true,
+        //         "exclude": [
+        //             "transform-es2015-for-of",
+        //             "transform-async-to-generator",
+        //             "transform-regenerator"
+        //         ]
+        //     }
+        // ]
+    ],
+    "plugins": [
+        "external-helpers",
+        "fast-async"
+    ]
+}
