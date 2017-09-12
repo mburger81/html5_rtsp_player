@@ -30,7 +30,7 @@ export default class RTSPClient extends BaseClient {
         };
         this.sampleQueues={};
     }
-    
+
     static streamType() {
         return 'rtsp';
     }
@@ -348,6 +348,9 @@ export class RTSPClientSM extends StateMachine {
             // if (track_type=='audio') continue;
             // if (track_type=='video') continue;
             let track = this.sdp.getMediaBlock(track_type);
+            /* Lanthings */
+            if (track.rtpmap[track.fmt[0]] === undefined) continue;
+            /* Lanthings */
             if (!PayloadType.string_map[track.rtpmap[track.fmt[0]].name]) continue;
 
             this.streams[track_type] = new RTSPStream(this, track);

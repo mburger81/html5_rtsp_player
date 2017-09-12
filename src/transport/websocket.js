@@ -1,5 +1,4 @@
 import {getTagged} from '../deps/bp_logger.js';
-import {JSEncrypt} from '../deps/jsencrypt.js';
 import {BaseTransport} from "../core/base_transport.js";
 import {CPU_CORES} from "../core/util/browser.js";
 
@@ -98,62 +97,10 @@ export default class WebsocketTransport extends BaseTransport {
     }
 }
 
-class WSPProtocol {
-    static get PROTO() {return  'WSP';}
-
-    static get V1_1() {return '1.1';}
-
-    static get CMD_INIT() {return 'INIT';}
-    static get CMD_JOIN() {return  'JOIN';}
-    static get CMD_WRAP() {return  'WRAP';}
-
-
-    constructor(ver){
-        this.ver = ver;
-    }
-
-    build(cmd, data, payload=''){
-        let data_str='';
-        if (!data.seq) {
-            data.seq = ++WSPProtocol.seq;
-        }
-        for (let k in data) {
-            data_str += `${k}: ${data[k]}\r\n`;
-        }
-        return `${WSPProtocol.PROTO}/${this.ver} ${cmd}\r\n${data_str}\r\n${payload}`;
-    }
-
-    static parse(data) {
-        let payIdx = data.indexOf('\r\n\r\n');
-        let lines = data.substr(0, payIdx).split('\r\n');
-        let hdr = lines.shift().match(new RegExp(`${WSPProtocol.PROTO}/${WSPProtocol.V1_1}\\s+(\\d+)\\s+(.+)`));
-        if (hdr) {
-            let res = {
-                code: Number(hdr[1]),
-                msg:  hdr[2],
-                data: {},
-                payload: ''
-            };
-            while (lines.length) {
-                let line = lines.shift();
-                if (line) {
-                    let [k,v] = line.split(':');
-                    res.data[k.trim()] = v.trim();
-                } else {
-                    break;
-                }
-            }
-            res.payload = data.substr(payIdx+4);
-            return res;
-        }
-        return null;
-    }
-}
-WSPProtocol.seq = 0;
-
 class WebSocketProxy {
-    static get CHN_CONTROL() {return 'control';}
-    static get CHN_DATA() {return  'data';}
+    /* Lanthings */
+    static get CHN_RTSP() {return 'rtsp';}
+    /* Lanthings */
 
     constructor(wsurl, endpoint, stream_type) {
         this.url = wsurl;
@@ -161,10 +108,9 @@ class WebSocketProxy {
         this.endpoint = endpoint;
         this.data_handler = ()=>{};
         this.disconnect_handler = ()=>{};
-        this.builder = new WSPProtocol(WSPProtocol.V1_1);
-        this.awaitingPromises = {};
-        this.seq = 0;
-        this.encryptor = new JSEncrypt();
+        /* Lanthings */
+        this.awaitingPromises = null;
+        /* Lanthings */
     }
 
     set_data_handler(handler) {
@@ -175,60 +121,48 @@ class WebSocketProxy {
         this.disconnect_handler = handler;
     }
 
+    /* Lanthings */
     close() {
         Log.log('closing connection');
         return new Promise((resolve)=>{
-            this.ctrlChannel.onclose = ()=>{
-                if (this.dataChannel) {
-                    this.dataChannel.onclose = ()=>{
-                        Log.log('closed');
-                        resolve();
-                    };
-                    this.dataChannel.close();
-                } else {
-                    Log.log('closed');
-                    resolve();
-                }
+            this.dataChannel.onclose = ()=>{
+                Log.log('closed');
+                resolve();
             };
-            this.ctrlChannel.close();
+            this.dataChannel.close();
         });
     }
+    /* Lanthings */
 
+    /* Lanthings */
     onDisconnect(){
-        this.ctrlChannel.onclose=null;
-        this.ctrlChannel.close();
-        if (this.dataChannel) {
-            this.dataChannel.onclose = null;
-            this.dataChannel.close();
-        }
-        this.disconnect_handler(this);
+        this.dataChannel.onclose = null;
+        this.dataChannel.close();
     }
+    /* Lanthings */
 
-    initDataChannel(channel_id) {
+    /* Lanthings */
+    initDataChannel() {
         return new Promise((resolve, reject)=>{
-            this.dataChannel = new WebSocket(this.url, WebSocketProxy.CHN_DATA);
+            this.dataChannel = new WebSocket(this.url, WebSocketProxy.CHN_RTSP);
             this.dataChannel.binaryType = 'arraybuffer';
+
+            this.connected = false;
+
             this.dataChannel.onopen = ()=>{
-                let msg = this.builder.build(WSPProtocol.CMD_JOIN, {
-                    channel: channel_id
-                });
-                Log.debug(msg);
-                this.dataChannel.send(msg);
+                resolve();
             };
             this.dataChannel.onmessage = (ev)=>{
                 Log.debug(`[data]\r\n${ev.data}`);
-                let res = WSPProtocol.parse(ev.data);
-                if (!res) {
-                    return reject();
-                }
 
-                this.dataChannel.onmessage=(e)=>{
-                    Log.debug('got data');
+                if(ev.data instanceof ArrayBuffer) {
                     if (this.data_handler) {
-                        this.data_handler(e.data);
+                        this.data_handler(ev.data);
                     }
-                };
-                resolve();
+                } else if(this.awaitingPromise) {
+                    var res = { seq: 1, payload: ev.data };
+                    this.awaitingPromise.resolve(res);
+                }
             };
             this.dataChannel.onerror = (e)=>{
                 Log.error(`[data] ${e.type}`);
@@ -240,104 +174,32 @@ class WebSocketProxy {
             };
         });
     }
+    /* Lanthings */
 
+    /* Lanthings */
     connect() {
-        this.encryptionKey = null;
         return new Promise((resolve, reject)=>{
-            this.ctrlChannel = new WebSocket(this.url, WebSocketProxy.CHN_CONTROL);
-
-            this.connected = false;
-
-            this.ctrlChannel.onopen = ()=>{
-                let headers = {
-                    proto: this.stream_type
-                };
-                if (this.endpoint.socket) {
-                    headers.socket = this.endpoint.socket;
-                } else {
-                    Object.assign(headers, {
-                        host:  this.endpoint.host,
-                        port:  this.endpoint.port
-                    })
-                }
-                let msg = this.builder.build(WSPProtocol.CMD_INIT, headers);
-                Log.debug(msg);
-                this.ctrlChannel.send(msg);
-            };
-
-            this.ctrlChannel.onmessage = (ev)=>{
-                Log.debug(`[ctrl]\r\n${ev.data}`);
-
-                let res = WSPProtocol.parse(ev.data);
-                if (!res) {
-                    return reject();
-                }
-
-                if (res.code >= 300) {
-                    Log.error(`[ctrl]\r\n${res.code}: ${res.msg}`);
-                    return reject();
-                }
-                this.ctrlChannel.onmessage = (e)=> {
-                    let res = WSPProtocol.parse(e.data);
-                    Log.debug(`[ctrl]\r\n${e.data}`);
-                    if (res.data.seq in this.awaitingPromises) {
-                        if (res.code < 300) {
-                            this.awaitingPromises[res.data.seq].resolve(res);
-                        } else {
-                            this.awaitingPromises[res.data.seq].reject(res);
-                        }
-                        delete this.awaitingPromises[res.data.seq];
-                    }
-                };
-                this.encryptionKey = res.data.pubkey || null;
-                if (this.encryptionKey) {
-                    this.encryptor.setPublicKey(this.encryptionKey);
-                    // TODO: check errors
-                }
-                this.initDataChannel(res.data.channel).then(resolve).catch(reject);
-            };
-
-            this.ctrlChannel.onerror = (e)=>{
-                Log.error(`[ctrl] ${e.type}`);
-                this.ctrlChannel.close();
-            };
-            this.ctrlChannel.onclose = (e)=>{
-                Log.error(`[ctrl] ${e.type}. code: ${e.code} ${e.reason || 'unknown reason'}`);
-                this.onDisconnect(e);
-            };
+            this.initDataChannel().then(resolve).catch(reject);
         });
     }
+    /* Lanthings */
 
-    encrypt(msg) {
-        if (this.encryptionKey) {
-            let crypted = this.encryptor.encrypt(msg);
-            if (crypted === false) {
-                throw new Error("Encryption failed. Stopping")
-            }
-            return crypted;
-        }
-        return msg;
-    }
-
+    /* Lanthings */
     send(payload) {
-        if (this.ctrlChannel.readyState != WebSocket.OPEN) {
+        if (this.dataChannel.readyState != WebSocket.OPEN) {
             this.close();
             // .then(this.connect.bind(this));
             // return;
             throw new Error('disconnected');
         }
         // Log.debug(payload);
-        let data = {
-            contentLength: payload.length,
-            seq: ++WSPProtocol.seq
-        };
         return {
-            seq:data.seq,
+            seq:1,
             promise: new Promise((resolve, reject)=>{
-                this.awaitingPromises[data.seq] = {resolve, reject};
-                let msg = this.builder.build(WSPProtocol.CMD_WRAP, data, payload);
-                Log.debug(msg);
-                this.ctrlChannel.send(this.encrypt(msg));
+                this.awaitingPromise = {resolve, reject};
+                Log.debug(payload);
+                this.dataChannel.send(payload);
             })};
     }
+    /* Lanthings */
 }

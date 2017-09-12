@@ -33,23 +33,27 @@ export class RTSPStream {
         return this.sendTeardown();
     }
 
+    /* LANTHINGS */
     getSetupURL(track) {
         var sessionBlock = this.client.sdp.getSessionBlock();
         if (Url.isAbsolute(track.control)) {
             return track.control;
         } else if (Url.isAbsolute(`${sessionBlock.control}${track.control}`)) {
             return `${sessionBlock.control}${track.control}`;
-        } else if (Url.isAbsolute(`${this.client.contentBase}${track.control}`)) {
+        } else /*if (Url.isAbsolute(`${this.client.contentBase}${track.control}`))*/ {
             /* Should probably check session level control before this */
             return `${this.client.contentBase}${track.control}`;
         }
-        else//need return default 
+        /*
+        else//need return default
             return track.control;
         Log.error('Can\'t determine track URL from ' +
             'block.control:' + track.control + ', ' +
             'session.control:' + sessionBlock.control + ', and ' +
             'content-base:' + this.client.contentBase);
+        */
     }
+    /* LANTHINGS */
 
     getControlURL() {
         let ctrl = this.client.sdp.getSessionBlock().control;
@@ -103,7 +107,9 @@ export class RTSPStream {
                 // TODO: disconnect stream and notify client
                 throw new Error("Connection broken");
             }*/
-            this.startKeepAlive();
+            /* Lanthings */
+            // this.startKeepAlive();
+            /* Lanthings */
         });
     }
 

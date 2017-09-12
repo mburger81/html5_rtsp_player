@@ -58,16 +58,22 @@ export class WSPlayer {
             this.player = node;
         }
 
-        let modules = opts.modules || {
+        /* Lanthings */
+        let modules = opts.modules || [{
             client: DEFAULT_CLIENT,
             transport: {
                 constructor: DEFAULT_TRANSPORT
             }
-        };
+        }];
+        /* Lanthings */
 
         this.modules = {};
         for (let module of modules) {
             let transport = module.transport || DEFAULT_TRANSPORT;
+            /* Lanthings */
+            if (opts.socket)
+                transport.options = {socket: opts.socket};
+            /* Lanthings */
             let client = module.client || DEFAULT_CLIENT;
             if (transport.constructor.canTransfer(client.streamType())) {
                 this.modules[client.streamType()] = {
@@ -78,7 +84,7 @@ export class WSPlayer {
                 Log.warn(`Client stream type ${client.streamType()} is incompatible with transport types [${transport.streamTypes().join(', ')}]. Skip`)
             }
         }
-        
+
         this.type = StreamType.RTSP;
         this.url = null;
         if (opts.url && opts.type) {
@@ -214,7 +220,7 @@ export class WSPlayer {
             this.client.stop();
         }
     }
-    
+
     async destroy() {
         if (this.transport) {
             if (this.client) {
