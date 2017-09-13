@@ -71,8 +71,9 @@ export class WSPlayer {
         for (let module of modules) {
             let transport = module.transport || DEFAULT_TRANSPORT;
             /* Lanthings */
-            if (opts.socket)
-                transport.options = {socket: opts.socket};
+            if (opts.socket) {
+                transport.options = {socket: opts.socket, protocols: opts.protocols};
+            }
             /* Lanthings */
             let client = module.client || DEFAULT_CLIENT;
             if (transport.constructor.canTransfer(client.streamType())) {

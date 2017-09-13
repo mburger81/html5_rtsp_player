@@ -16,6 +16,9 @@ export default class WebsocketTransport extends BaseTransport {
         this.currentProxy = 0;
         this.workers = 1;
         this.socket_url = options.socket;
+        /* Lanthings */
+        this.protocols = options.protocols
+        /* Lanthings */
         this.ready = this.connect();
     }
 
@@ -39,7 +42,9 @@ export default class WebsocketTransport extends BaseTransport {
             let promises = [];
             // TODO: get mirror list
             for (let i=0; i<this.workers; ++i) {
-                let proxy = new WebSocketProxy(this.socket_url, this.endpoint, this.stream_type);
+                /* Lanthings */
+                let proxy = new WebSocketProxy(this.socket_url, this.endpoint, this.stream_type, this.protocols);
+                /* Lanthings */
 
                 proxy.set_disconnect_handler((e)=> {
                     this.eventSource.dispatchEvent('disconnected', {code: e.code, reason: e.reason});
@@ -102,7 +107,7 @@ class WebSocketProxy {
     static get CHN_RTSP() {return 'rtsp';}
     /* Lanthings */
 
-    constructor(wsurl, endpoint, stream_type) {
+    constructor(wsurl, endpoint, stream_type, protocols) {
         this.url = wsurl;
         this.stream_type = stream_type;
         this.endpoint = endpoint;
@@ -110,6 +115,7 @@ class WebSocketProxy {
         this.disconnect_handler = ()=>{};
         /* Lanthings */
         this.awaitingPromises = null;
+        this.protocols = protocols;
         /* Lanthings */
     }
 
@@ -144,7 +150,23 @@ class WebSocketProxy {
     /* Lanthings */
     initDataChannel() {
         return new Promise((resolve, reject)=>{
-            this.dataChannel = new WebSocket(this.url, WebSocketProxy.CHN_RTSP);
+
+            /*Lanthings */
+            let prot = [];
+            prot.push (WebSocketProxy.CHN_RTSP);
+
+            if (this.protocols) {
+                if (this.protocols instanceof Array) {
+                    this.protocols.forEach((protocol) => {
+                        prot.push(protocol);
+                    });
+                } else {
+                    prot.push(this.protocols);
+                }
+            }
+            this.dataChannel = new WebSocket(this.url, prot);
+            /* Lanthings */
+
             this.dataChannel.binaryType = 'arraybuffer';
 
             this.connected = false;
